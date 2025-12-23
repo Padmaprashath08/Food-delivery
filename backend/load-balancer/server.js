@@ -88,7 +88,6 @@ app.use(['/api/restaurants', '/api/menus'], (req, res, next) => {
   proxy(req, res, next);
 });
 
-const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Load balancer running on port ${PORT}`);
   console.log('Architecture:');

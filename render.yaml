@@ -62,3 +62,24 @@ services:
         value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: PORT
         value: 10000
+
+  # Load Balancer
+  - type: web
+    name: food-delivery-loadbalancer
+    env: node
+    plan: free
+    buildCommand: cd backend/load-balancer && npm install
+    startCommand: cd backend/load-balancer && npm start
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: AUTH_SERVICE_URL
+        value: https://food-delivery-auth-hekg.onrender.com
+      - key: ORDER_SERVICE_URL
+        value: https://food-delivery-orders-hekg.onrender.com
+      - key: RESTAURANT_SERVICE_URL
+        value: https://food-delivery-restaurants-hekg.onrender.com
+      - key: ANALYTICS_SERVICE_URL
+        value: https://food-delivery-analytics-hekg.onrender.com
+      - key: PORT
+        value: 10000
