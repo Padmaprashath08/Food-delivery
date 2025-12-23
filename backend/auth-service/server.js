@@ -8,7 +8,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/?appName=Food-delivery');
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fooddelivery';
+mongoose.connect(MONGODB_URI);
 
 const userSchema = new mongoose.Schema({
     name: { type: String, required: true },
@@ -18,7 +19,8 @@ const userSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const User = mongoose.model('User', userSchema);
-const JWT_SECRET = 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const PORT = process.env.PORT || 4001;
 
 app.get('/health', (req, res) => {
     res.json({ status: 'Auth service running', port: 4001 });
@@ -79,6 +81,6 @@ app.post('/api/auth/verify', (req, res) => {
     }
 });
 
-app.listen(4001, () => {
-    console.log('Auth service running on port 4001');
+app.listen(PORT, () => {
+    console.log(`Auth service running on port ${PORT}`);
 });

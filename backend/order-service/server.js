@@ -7,7 +7,8 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/?appName=Food-delivery');
+const MONGODB_URI = process.env.MONGODB_URI || 'mongodb://localhost:27017/fooddelivery';
+mongoose.connect(MONGODB_URI);
 
 const orderSchema = new mongoose.Schema({
     userId: { type: String, required: true },
@@ -24,7 +25,8 @@ const orderSchema = new mongoose.Schema({
 }, { timestamps: true });
 
 const Order = mongoose.model('Order', orderSchema);
-const JWT_SECRET = 'your-secret-key';
+const JWT_SECRET = process.env.JWT_SECRET || 'your-secret-key';
+const PORT = process.env.PORT || 4002;
 
 const verifyToken = (req, res, next) => {
     const token = req.headers.authorization?.split(' ')[1];
@@ -42,7 +44,7 @@ const verifyToken = (req, res, next) => {
 };
 
 app.get('/health', (req, res) => {
-    res.json({ status: 'Order service running', port: 4002 });
+    res.json({ status: 'Order service running', port: PORT });
 });
 
 app.get('/api/orders', verifyToken, async (req, res) => {
@@ -87,6 +89,6 @@ app.put('/api/orders/:id/status', verifyToken, async (req, res) => {
     }
 });
 
-app.listen(4002, () => {
-    console.log('Order service running on port 4002');
+app.listen(PORT, () => {
+    console.log(`Order service running on port ${PORT}`);
 });

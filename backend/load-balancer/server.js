@@ -5,16 +5,23 @@ const cors = require('cors');
 const app = express();
 app.use(cors());
 
+// Environment variables for service URLs
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || 'http://localhost:4001';
+const ORDER_SERVICE_URL = process.env.ORDER_SERVICE_URL || 'http://localhost:4002';
+const RESTAURANT_SERVICE_URL = process.env.RESTAURANT_SERVICE_URL || 'http://localhost:3001';
+const ANALYTICS_SERVICE_URL = process.env.ANALYTICS_SERVICE_URL || 'http://localhost:5000';
+const PORT = process.env.PORT || 8080;
+
 // Primary and Replica servers for restaurants/menus
 const restaurantServers = [
-  'http://localhost:3001',  // Node.js primary
-  'http://localhost:5000'   // Python replica
+  RESTAURANT_SERVICE_URL,  // Node.js primary
+  ANALYTICS_SERVICE_URL    // Python replica
 ];
 
 // Dedicated microservices
 const microservices = {
-  auth: 'http://localhost:4001',
-  orders: 'http://localhost:4002'
+  auth: AUTH_SERVICE_URL,
+  orders: ORDER_SERVICE_URL
 };
 
 let currentServer = 0;
@@ -30,7 +37,7 @@ function getNextRestaurantServer() {
 app.get('/health', (req, res) => {
   res.json({ 
     status: 'Load balancer running', 
-    port: 8080,
+    port: PORT,
     restaurantServers: restaurantServers,
     microservices: microservices
   });
@@ -81,13 +88,13 @@ app.use(['/api/restaurants', '/api/menus'], (req, res, next) => {
   proxy(req, res, next);
 });
 
-const PORT = 8080;
+const PORT = process.env.PORT || 8080;
 app.listen(PORT, () => {
   console.log(`Load balancer running on port ${PORT}`);
   console.log('Architecture:');
-  console.log('- Auth Service: http://localhost:4001 (Dedicated)');
-  console.log('- Order Service: http://localhost:4002 (Dedicated)');
-  console.log('- Restaurant Primary: http://localhost:3001 (Node.js)');
-  console.log('- Restaurant Replica: http://localhost:5000 (Python)');
+  console.log(`- Auth Service: ${AUTH_SERVICE_URL} (Dedicated)`);
+  console.log(`- Order Service: ${ORDER_SERVICE_URL} (Dedicated)`);
+  console.log(`- Restaurant Primary: ${RESTAURANT_SERVICE_URL} (Node.js)`);
+  console.log(`- Analytics Service: ${ANALYTICS_SERVICE_URL} (Python)`);
   console.log('Load balancing: Round-robin for restaurants/menus only');
 });

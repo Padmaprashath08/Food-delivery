@@ -9,7 +9,8 @@ app = Flask(__name__)
 CORS(app)
 
 # MongoDB connection
-client = MongoClient('mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/?retryWrites=true&w=majority')
+mongo_uri = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
+client = MongoClient(mongo_uri)
 db = client['fooddelivery']
 
 # Collections - Only restaurants and menus
@@ -32,7 +33,7 @@ def serialize_docs(docs):
 
 @app.route('/health', methods=['GET'])
 def health_check():
-    return jsonify({'status': 'Python replica server running', port: 5000})
+    return jsonify({'status': 'Python replica server running', 'port': 5000})
 
 # ===== RESTAURANT ROUTES =====
 @app.route('/api/restaurants', methods=['GET'])
@@ -180,6 +181,6 @@ def restaurant_created_notification():
         return jsonify({'message': 'Server error'}), 500
 
 if __name__ == '__main__':
-    port = int(os.environ.get('PORT', 5000))
+    port = int(os.getenv('PORT', 5000))
     print(f"Starting Python replica server on port {port}...")
-    app.run(debug=False, host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port, debug=False)

@@ -1,17 +1,26 @@
 services:
+  # Frontend React App
+  - type: web
+    name: food-delivery-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/build
+    envVars:
+      - key: REACT_APP_API_URL
+        value: https://food-delivery-loadbalancer.onrender.com
+
   # Auth Service
   - type: web
     name: food-delivery-auth
     env: node
     plan: free
-    rootDir: backend/auth-service
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend/auth-service && npm install
+    startCommand: cd backend/auth-service && npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority
+        value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: JWT_SECRET
         generateValue: true
       - key: PORT
@@ -22,16 +31,15 @@ services:
     name: food-delivery-orders
     env: node
     plan: free
-    rootDir: backend/order-service
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend/order-service && npm install
+    startCommand: cd backend/order-service && npm start
     envVars:
       - key: NODE_ENV
         value: production
       - key: MONGODB_URI
-        value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority
+        value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: JWT_SECRET
-        generateValue: true
+        sync: false
       - key: PORT
         value: 10000
 
@@ -40,32 +48,28 @@ services:
     name: food-delivery-restaurants
     env: node
     plan: free
-    rootDir: backend/backend-node
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend/backend-node && npm install
+    startCommand: cd backend/backend-node && npm start
     envVars:
       - key: NODE_ENV
         value: production
+      - key: MONGODB_URI
+        value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: PORT
         value: 10000
-      - key: MONGODB_URI
-        value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority
-      - key: JWT_SECRET
-        generateValue: true
-      - key: PYTHON_BACKEND_URL
-        value: https://food-delivery-restaurants-replica.onrender.com
 
-  # Restaurant Replica Service (Python)
+  # Analytics Service (Python)
   - type: web
-    name: food-delivery-restaurants-replica
+    name: food-delivery-analytics
     env: python
     plan: free
-    rootDir: backend/backend-python
-    buildCommand: pip install -r requirements.txt
-    startCommand: python app.py
+    buildCommand: cd backend/backend-python && pip install -r requirements.txt
+    startCommand: cd backend/backend-python && python app.py
     envVars:
-      - key: FLASK_ENV
-        value: production
+      - key: PYTHON_VERSION
+        value: 3.9.16
+      - key: MONGODB_URI
+        value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: PORT
         value: 10000
 
@@ -74,19 +78,18 @@ services:
     name: food-delivery-loadbalancer
     env: node
     plan: free
-    rootDir: backend/load-balancer
-    buildCommand: npm install
-    startCommand: npm start
+    buildCommand: cd backend/load-balancer && npm install
+    startCommand: cd backend/load-balancer && npm start
     envVars:
       - key: NODE_ENV
         value: production
-      - key: PORT
-        value: 10000
       - key: AUTH_SERVICE_URL
         value: https://food-delivery-auth.onrender.com
       - key: ORDER_SERVICE_URL
         value: https://food-delivery-orders.onrender.com
-      - key: RESTAURANT_PRIMARY_URL
+      - key: RESTAURANT_SERVICE_URL
         value: https://food-delivery-restaurants.onrender.com
-      - key: RESTAURANT_REPLICA_URL
-        value: https://food-delivery-restaurants-replica.onrender.com
+      - key: ANALYTICS_SERVICE_URL
+        value: https://food-delivery-analytics.onrender.com
+      - key: PORT
+        value: 10000
