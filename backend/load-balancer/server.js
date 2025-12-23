@@ -6,10 +6,10 @@ const app = express();
 app.use(cors());
 
 // Environment variables for service URLs
-const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || 'http://localhost:4001';
-const ORDER_SERVICE_URL = process.env.ORDER_SERVICE_URL || 'http://localhost:4002';
-const RESTAURANT_SERVICE_URL = process.env.RESTAURANT_SERVICE_URL || 'http://localhost:3001';
-const ANALYTICS_SERVICE_URL = process.env.ANALYTICS_SERVICE_URL || 'http://localhost:5000';
+const AUTH_SERVICE_URL = process.env.AUTH_SERVICE_URL || 'https://food-delivery-auth-hekg.onrender.com';
+const ORDER_SERVICE_URL = process.env.ORDER_SERVICE_URL || 'https://food-delivery-orders-hekg.onrender.com';
+const RESTAURANT_SERVICE_URL = process.env.RESTAURANT_SERVICE_URL || 'https://food-delivery-restaurants-hekg.onrender.com';
+const ANALYTICS_SERVICE_URL = process.env.ANALYTICS_SERVICE_URL || 'https://food-delivery-analytics-hekg.onrender.com';
 const PORT = process.env.PORT || 8080;
 
 // Primary and Replica servers for restaurants/menus

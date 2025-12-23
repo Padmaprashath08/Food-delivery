@@ -9,7 +9,7 @@ app = Flask(__name__)
 CORS(app)
 
 # MongoDB connection
-mongo_uri = os.getenv('MONGODB_URI', 'mongodb://localhost:27017/')
+mongo_uri = os.getenv('MONGODB_URI', 'mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery')
 client = MongoClient(mongo_uri)
 db = client['fooddelivery']
 

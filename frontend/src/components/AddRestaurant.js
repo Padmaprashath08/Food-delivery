@@ -12,13 +12,20 @@ const AddRestaurant = ({ user, logout }) => {
     e.preventDefault();
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        alert('Please login first');
+        return;
+      }
+      
       await axios.post(`${config.API_URL}/api/restaurants`, restaurantForm, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setRestaurantForm({ name: '', address: '', rating: '', type: '' });
       alert('Restaurant added successfully!');
     } catch (error) {
-      alert('Error adding restaurant');
+      console.error('Error adding restaurant:', error);
+      const errorMessage = error.response?.data?.message || 'Error adding restaurant';
+      alert(errorMessage);
     }
   };
 
