@@ -12,7 +12,7 @@ services:
       - key: MONGODB_URI
         value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: JWT_SECRET
-        generateValue: true
+        value: food-delivery-jwt-secret-2024
       - key: PORT
         value: 10000
 
@@ -29,7 +29,7 @@ services:
       - key: MONGODB_URI
         value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: JWT_SECRET
-        generateValue: true
+        value: food-delivery-jwt-secret-2024
       - key: PORT
         value: 10000
 
@@ -46,7 +46,7 @@ services:
       - key: MONGODB_URI
         value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: JWT_SECRET
-        generateValue: true
+        value: food-delivery-jwt-secret-2024
       - key: PYTHON_BACKEND_URL
         value: https://food-delivery-analytics-hekg.onrender.com
       - key: PORT
