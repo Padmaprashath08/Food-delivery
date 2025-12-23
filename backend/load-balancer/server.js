@@ -61,18 +61,23 @@ app.use('/api/orders', createProxyMiddleware({
   }
 }));
 
-// Load balance restaurant/menu requests between primary and replica
+// Load balance restaurant/menu requests - Write operations go to Node.js only
 app.use(['/api/restaurants', '/api/menus'], (req, res, next) => {
-  const targetServer = getNextRestaurantServer();
+  // Write operations (POST, PUT, DELETE) always go to Node.js primary
+  const targetServer = (req.method === 'GET') ? getNextRestaurantServer() : RESTAURANT_SERVICE_URL;
   console.log(`Routing ${req.method} ${req.path} to ${targetServer}`);
   
   const proxy = createProxyMiddleware({
     target: targetServer,
     changeOrigin: true,
     onError: (err, req, res) => {
-      console.log(`Error with ${targetServer}, trying other server...`);
-      const fallbackServer = restaurantServers.find(s => s !== targetServer);
-      if (fallbackServer) {
+      console.log(`Error with ${targetServer}, trying fallback...`);
+      // For write operations, only fallback to Node.js
+      const fallbackServer = (req.method === 'GET') ? 
+        restaurantServers.find(s => s !== targetServer) : 
+        RESTAURANT_SERVICE_URL;
+      
+      if (fallbackServer && fallbackServer !== targetServer) {
         console.log(`Falling back to ${fallbackServer}`);
         const fallbackProxy = createProxyMiddleware({
           target: fallbackServer,
@@ -80,7 +85,7 @@ app.use(['/api/restaurants', '/api/menus'], (req, res, next) => {
         });
         fallbackProxy(req, res, next);
       } else {
-        res.status(503).json({ error: 'All restaurant servers unavailable' });
+        res.status(503).json({ error: 'Restaurant service unavailable' });
       }
     }
   });
