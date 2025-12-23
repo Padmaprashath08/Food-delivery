@@ -29,7 +29,7 @@ services:
       - key: MONGODB_URI
         value: mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/fooddelivery?retryWrites=true&w=majority&appName=Food-delivery
       - key: JWT_SECRET
-        sync: false
+        generateValue: true
       - key: PORT
         value: 10000
 
