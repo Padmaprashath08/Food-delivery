@@ -7,7 +7,7 @@ const app = express();
 app.use(cors());
 app.use(express.json());
 
-mongoose.connect('mongodb://localhost:27017/fooddelivery');
+mongoose.connect('mongodb+srv://spadmaprashath_db_user:Padma123@food-delivery.0bd2vyd.mongodb.net/?appName=Food-delivery');
 
 const orderSchema = new mongoose.Schema({
     userId: { type: String, required: true },
