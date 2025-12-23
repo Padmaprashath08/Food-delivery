@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 
 const Checkout = ({ user, logout }) => {
   const [cart] = useState(JSON.parse(localStorage.getItem('cart')) || []);
@@ -56,7 +57,7 @@ const Checkout = ({ user, logout }) => {
         deliveryAddress: 'Default Address'
       };
 
-      await axios.post('http://localhost:4002/api/orders', orderData, {
+      await axios.post(`${config.API_URL}/api/orders`, orderData, {
         headers: { Authorization: `Bearer ${token}` }
       });
 

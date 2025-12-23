@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 
 const RestaurantMenu = ({ user, logout }) => {
   const { restaurantId } = useParams();
@@ -15,7 +16,7 @@ const RestaurantMenu = ({ user, logout }) => {
 
   const fetchRestaurant = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/restaurants');
+      const response = await axios.get(`${config.API_URL}/api/restaurants`);
       const restaurantData = response.data.find(r => r._id === restaurantId);
       setRestaurant(restaurantData);
     } catch (error) {
@@ -25,7 +26,7 @@ const RestaurantMenu = ({ user, logout }) => {
 
   const fetchMenus = async () => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/menus/${restaurantId}`);
+      const response = await axios.get(`${config.API_URL}/api/menus/${restaurantId}`);
       setMenus(response.data);
     } catch (error) {
       console.error('Error fetching menus:', error);

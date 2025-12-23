@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 
 const AddRestaurant = ({ user, logout }) => {
   const [restaurantForm, setRestaurantForm] = useState({
@@ -10,7 +11,10 @@ const AddRestaurant = ({ user, logout }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3001/api/restaurants', restaurantForm);
+      const token = localStorage.getItem('token');
+      await axios.post(`${config.API_URL}/api/restaurants`, restaurantForm, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
       setRestaurantForm({ name: '', address: '', rating: '', type: '' });
       alert('Restaurant added successfully!');
     } catch (error) {

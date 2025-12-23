@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useParams } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 
 const ManageMenus = ({ user, logout }) => {
   const { restaurantId } = useParams();
@@ -22,7 +23,7 @@ const ManageMenus = ({ user, logout }) => {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/restaurants');
+      const response = await axios.get(`${config.API_URL}/api/restaurants`);
       setRestaurants(response.data);
     } catch (error) {
       console.error('Error fetching restaurants:', error);
@@ -31,7 +32,7 @@ const ManageMenus = ({ user, logout }) => {
 
   const fetchRestaurantDetails = async (id) => {
     try {
-      const response = await axios.get('http://localhost:3001/api/restaurants');
+      const response = await axios.get(`${config.API_URL}/api/restaurants`);
       const restaurant = response.data.find(r => r._id === id);
       setSelectedRestaurant(restaurant);
     } catch (error) {
@@ -41,7 +42,7 @@ const ManageMenus = ({ user, logout }) => {
 
   const fetchMenus = async (id) => {
     try {
-      const response = await axios.get(`http://localhost:3001/api/menus/${id}`);
+      const response = await axios.get(`${config.API_URL}/api/menus/${id}`);
       setMenus(response.data);
     } catch (error) {
       console.error('Error fetching menus:', error);
@@ -51,9 +52,12 @@ const ManageMenus = ({ user, logout }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
-      await axios.post('http://localhost:3001/api/menus', {
+      const token = localStorage.getItem('token');
+      await axios.post(`${config.API_URL}/api/menus`, {
         ...menuForm,
         restaurantId: selectedRestaurant._id
+      }, {
+        headers: { Authorization: `Bearer ${token}` }
       });
       setMenuForm({ name: '', price: '', category: '' });
       setShowAddForm(false);
@@ -67,7 +71,10 @@ const ManageMenus = ({ user, logout }) => {
   const deleteMenu = async (id) => {
     if (window.confirm('Are you sure you want to delete this menu item?')) {
       try {
-        await axios.delete(`http://localhost:3001/api/menus/${id}`);
+        const token = localStorage.getItem('token');
+        await axios.delete(`${config.API_URL}/api/menus/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         fetchMenus(selectedRestaurant._id);
         alert('Menu item deleted successfully!');
       } catch (error) {

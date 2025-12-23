@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 
 const Orders = ({ user, logout }) => {
   const [orders, setOrders] = useState([]);
@@ -13,7 +14,7 @@ const Orders = ({ user, logout }) => {
   const fetchOrders = async () => {
     try {
       const token = localStorage.getItem('token');
-      const response = await axios.get('http://localhost:4002/api/orders', {
+      const response = await axios.get(`${config.API_URL}/api/orders`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setOrders(response.data);

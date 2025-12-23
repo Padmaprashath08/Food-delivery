@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import axios from 'axios';
+import config from '../config';
 
 const ManageRestaurants = ({ user, logout }) => {
   const [restaurants, setRestaurants] = useState([]);
@@ -11,7 +12,7 @@ const ManageRestaurants = ({ user, logout }) => {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await axios.get('http://localhost:3001/api/restaurants');
+      const response = await axios.get(`${config.API_URL}/api/restaurants`);
       setRestaurants(response.data);
     } catch (error) {
       console.error('Error fetching restaurants:', error);
@@ -21,7 +22,10 @@ const ManageRestaurants = ({ user, logout }) => {
   const deleteRestaurant = async (id) => {
     if (window.confirm('Are you sure you want to delete this restaurant?')) {
       try {
-        await axios.delete(`http://localhost:3001/api/restaurants/${id}`);
+        const token = localStorage.getItem('token');
+        await axios.delete(`${config.API_URL}/api/restaurants/${id}`, {
+          headers: { Authorization: `Bearer ${token}` }
+        });
         fetchRestaurants();
         alert('Restaurant deleted successfully!');
       } catch (error) {
