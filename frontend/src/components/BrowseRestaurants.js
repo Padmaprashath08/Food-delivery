@@ -14,7 +14,7 @@ const BrowseRestaurants = ({ user, logout }) => {
 
   const fetchRestaurants = async () => {
     try {
-      const response = await axios.get(`${config.API_URL}/api/restaurants`);
+      const response = await axios.get(`${config.RESTAURANT_SERVICE_URL}/api/restaurants`);
       setRestaurants(response.data);
     } catch (error) {
       console.error('Error fetching restaurants:', error);
