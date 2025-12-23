@@ -15,7 +15,7 @@ const Login = ({ setUser }) => {
     e.preventDefault();
     try {
       const endpoint = isLogin ? '/api/auth/login' : '/api/auth/register';
-      const response = await axios.post(`${config.AUTH_SERVICE_URL}${endpoint}`, formData);
+      const response = await axios.post(`${config.API_URL}${endpoint}`, formData);
       
       localStorage.setItem('token', response.data.token);
       localStorage.setItem('user', JSON.stringify(response.data.user));
